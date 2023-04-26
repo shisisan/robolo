@@ -23,7 +23,7 @@
 			"ESNext"
 		],
 		"paths": {
-			"#/*": [
+			"#/root/*": [
 				"./src/*"
 			],
 			"#/commands/*": [
