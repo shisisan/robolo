@@ -8,7 +8,7 @@ export default defineConfig({
 	format: ['cjs'],
 	minify: false,
 	tsconfig: 'tsconfig.json',
-	target: 'es2020',
+	target: 'es6',
 	splitting: false,
 	skipNodeModulesBundle: true,
 	sourcemap: true,

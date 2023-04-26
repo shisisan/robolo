@@ -2,7 +2,7 @@
   "name": "robolo",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "author": "@sapphire",
+  "author": "shisisan",
   "license": "UNLICENSE",
   "type": "commonjs",
   "dependencies": {

@@ -1,41 +1,23 @@
-import './lib/setup';
-import { LogLevel, SapphireClient } from '@sapphire/framework';
-import { GatewayIntentBits, Partials } from 'discord.js';
+import '@sapphire/plugin-api/register';
+import '@sapphire/plugin-editable-commands/register';
+import '@sapphire/plugin-logger/register';
+import '@sapphire/plugin-subcommands/register';
+import { setup } from '@skyra/env-utilities';
+import * as colorette from 'colorette';
+import { join } from 'path';
+import { srcDir } from '#/lib/utils/constants';
+import { RoboloClientConfig } from 'config';
+import { RoboloClient } from '#/lib/structures/RoboloClient';
 
-const client = new SapphireClient({
-	defaultPrefix: '!',
-	regexPrefix: /^(hey +)?bot[,! ]/i,
-	caseInsensitiveCommands: true,
-	logger: {
-		level: LogLevel.Debug
-	},
-	shards: 'auto',
-	intents: [
-		GatewayIntentBits.DirectMessageReactions,
-		GatewayIntentBits.DirectMessages,
-		GatewayIntentBits.GuildBans,
-		GatewayIntentBits.GuildEmojisAndStickers,
-		GatewayIntentBits.GuildMembers,
-		GatewayIntentBits.GuildMessageReactions,
-		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildVoiceStates,
-		GatewayIntentBits.MessageContent
-	],
-	partials: [Partials.Channel],
-	loadMessageCommandListeners: true
-});
+setup({ path: join(srcDir, '.env') });
 
-const main = async () => {
-	try {
-		client.logger.info('Logging in');
-		await client.login();
-		client.logger.info('logged in');
-	} catch (error) {
-		client.logger.fatal(error);
-		client.destroy();
-		process.exit(1);
-	}
-};
+colorette.createColors({ useColor: true });
 
-main();
+/**
+ * @description Bootstraps Robolo bots.
+ */
+async function main(): Promise<void> {
+	void new RoboloClient(RoboloClientConfig).login(process.env.DISCORD_TOKEN);
+}
+
+void main();
