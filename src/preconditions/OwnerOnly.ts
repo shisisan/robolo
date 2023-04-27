@@ -1,26 +1,31 @@
-import { AllFlowsPrecondition } from '@sapphire/framework';
-import { envParseArray } from '@skyra/env-utilities';
-import type { CommandInteraction, ContextMenuCommandInteraction, Message, Snowflake } from 'discord.js';
-
-const OWNERS = envParseArray('OWNERS');
+import { BOT_OWNER } from '#/lib/utils/constants';
+import { 
+	AllFlowsPrecondition, 
+	AsyncPreconditionResult 
+} from '@sapphire/framework';
+import type { Snowflake } from 'discord.js';
 
 export class UserPrecondition extends AllFlowsPrecondition {
-	#message = 'This command can only be used by the owner.';
 
-	public override chatInputRun(interaction: CommandInteraction) {
-		return this.doOwnerCheck(interaction.user.id);
+	/**
+	 * @description message listeners bot owner check
+	 * @param message
+	 * @returns boolean
+	 */
+	public override async messageRun(...[message]: Parameters<AllFlowsPrecondition['messageRun']>) {
+		return this.isBotOwner(message.author.id);
 	}
 
-	public override contextMenuRun(interaction: ContextMenuCommandInteraction) {
-		return this.doOwnerCheck(interaction.user.id);
+	public override async chatInputRun(...[interaction]: Parameters<AllFlowsPrecondition['chatInputRun']>) {
+		return this.isBotOwner(interaction.user.id);
 	}
 
-	public override messageRun(message: Message) {
-		return this.doOwnerCheck(message.author.id);
+	public override contextMenuRun(...[interaction]: Parameters<AllFlowsPrecondition['contextMenuRun']>) {
+		return this.isBotOwner(interaction.user.id);
 	}
 
-	private doOwnerCheck(userId: Snowflake) {
-		return OWNERS.includes(userId) ? this.ok() : this.error({ message: this.#message });
+	private async isBotOwner(id: Snowflake): AsyncPreconditionResult {
+		return BOT_OWNER.includes(id) ? this.ok() : this.error({ message: 'Only owner to enable execute this command.' });
 	}
 }
 

@@ -1,7 +1,7 @@
 import { RoboloCommand } from "#/lib/structures/extension/RoboloCommand";
 import { sendLoadingMessage } from "#/lib/utils/utils";
 import { RegisterBehavior } from "@sapphire/framework";
-import { InteractionResponse, SlashCommandBuilder } from "discord.js";
+import { InteractionResponse, Message, SlashCommandBuilder } from "discord.js";
 
 /**
  * @description Class of the PingCommand
@@ -40,11 +40,27 @@ export class PingCommand extends RoboloCommand {
     }
 
     /**
-     * @description Run the command.
+     * @description Run the command as interaction.
      * @param interaction - The command interaction.
      */
     public async chatInputRun(interaction: RoboloCommand.ChatInputCommandInteraction): Promise<InteractionResponse> {
-        return interaction.reply({
+        return this.handle(interaction);
+    }
+
+    /**
+     * @description Run the command as message.
+     * @param message - The message args
+     */
+    public async messageRun(message: Message): Promise<void> {
+        return this.handle(message);
+    }
+
+    /**
+     * @description Handle the command
+     * @param ctx - typeof ChatInputCommandInteraction or Message.
+     */
+    public async handle(ctx: RoboloCommand.ChatInputCommandInteraction | Message): Promise<any> {
+        return ctx.reply({  
             embeds: [sendLoadingMessage()]
         })
     }

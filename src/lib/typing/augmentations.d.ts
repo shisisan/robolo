@@ -1,7 +1,8 @@
-import { type ArrayString } from '@skyra/env-utilities';
 
-declare module '@skyra/env-utilities' {
-	interface Env {
-		OWNERS: ArrayString;
+declare module 'NodeJS' {
+	interface ProcessEnv {
+		DISCORD_TOKEN: string;
+        DEFAULT_PREFIX: string;
+        NODE_ENV: "development" | "production";
 	}
 }
