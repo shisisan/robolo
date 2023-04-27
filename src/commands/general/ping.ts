@@ -1,0 +1,51 @@
+import { RoboloCommand } from "#/lib/structures/extension/RoboloCommand";
+import { sendLoadingMessage } from "#/lib/utils/utils";
+import { RegisterBehavior } from "@sapphire/framework";
+import { InteractionResponse, SlashCommandBuilder } from "discord.js";
+
+/**
+ * @description Class of the PingCommand
+ * @extends RoboloCommand
+ */
+export class PingCommand extends RoboloCommand {
+
+    /**
+     * @description The constructor for the about command.
+     * @param context - The command context.
+     * @param options - The command options.
+     */
+    constructor(context: RoboloCommand.Context, options: RoboloCommand.Options) {
+        super(context, {
+            ...options,
+            name: "ping",
+            description: "To know ping latency of the bot"
+        });
+        
+    }
+
+    /**
+     * @description Register slash command using SlashCommandBuilder
+     * @param builder - The command builder.
+     */
+    public override registerApplicationCommands(builder: RoboloCommand.Registry) {
+        const command: SlashCommandBuilder = new SlashCommandBuilder()
+            .setName(this.name)
+            .setDescription(this.description);
+
+        builder.registerChatInputCommand(command, {
+            behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+            guildIds: [],
+            idHints: [],
+        });
+    }
+
+    /**
+     * @description Run the command.
+     * @param interaction - The command interaction.
+     */
+    public async chatInputRun(interaction: RoboloCommand.ChatInputCommandInteraction): Promise<InteractionResponse> {
+        return interaction.reply({
+            embeds: [sendLoadingMessage()]
+        })
+    }
+}
